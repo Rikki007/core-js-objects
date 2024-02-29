@@ -133,8 +133,17 @@ function makeImmutable(obj) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(lettersObject) {
+  const values = Object.entries(lettersObject).flat();
+  const maxVal = Math.max.apply(null, values);
+  const word = Array.from({ length: maxVal }).fill('_');
+  const arr = Object.entries(lettersObject);
+  arr.forEach(([symbol, positions]) => {
+    positions.forEach((position) => {
+      word[position] = symbol;
+    });
+  });
+  return word.join('');
 }
 
 /**
@@ -151,8 +160,35 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  const obj = {};
+  obj[25] = 0;
+  obj[50] = 0;
+  obj[100] = 0;
+  for (let i = 0; i < queue.length; i += 1) {
+    const item = queue[i];
+    if (item === 25) {
+      obj[25] += 1;
+    }
+    if (item === 50) {
+      obj[25] -= 1;
+      if (obj[25] < 0) {
+        return false;
+      }
+      obj[50] += 1;
+    }
+    if (item === 100) {
+      if (obj[50] > 0 && obj[25] > 0) {
+        obj[50] -= 1;
+        obj[25] -= 1;
+      } else if (obj[25] >= 3) {
+        obj[25] -= 3;
+      } else if (obj[50] === 0 || obj[25] < 3) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 /**
@@ -271,8 +307,17 @@ function sortCitiesArray(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const map = new Map();
+  array.forEach((item) => {
+    if (map.has(keySelector(item))) {
+      map.get(keySelector(item)).push(valueSelector(item));
+    }
+    if (!map.has(keySelector(item))) {
+      map.set(keySelector(item), [valueSelector(item)]);
+    }
+  });
+  return map;
 }
 
 /**
